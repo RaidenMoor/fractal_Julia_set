@@ -24,8 +24,9 @@ namespace fractal
 
         private Complex C = new Complex(0, 1);
 
-        private Color bgColor = Color.Black;
-        private Color outColor = Color.Black;
+         int red = 255, green = 0, blue = 151;
+        private Color bgColor = Color.Black, outColor;
+  
 
         private int currIteration = 0;
 
@@ -36,8 +37,9 @@ namespace fractal
             InitializeComponent();
             bitmap = new Bitmap(WIDTH, HEIGHT);
 
-           pictureBox1.Image = bitmap;
+            pictureBox1.Image = bitmap;
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
+            pictureBox1.BackColor = Color.Black;
 
             button1.Click += Button1_Click;
         }
@@ -54,85 +56,49 @@ namespace fractal
 
         private void DrawStep()
         {
+           
             double real, imag;
             using (Graphics g = Graphics.FromImage(bitmap))
             {
+                if (red >= 14 && red <= 255)
+                    red -= 14;
+                else red = 255;
+             
+
+                outColor = Color.FromArgb(red, green, blue);
                 for (int x = 0; x < WIDTH; x++)
                 {
-                    for(int y = 0; y < HEIGHT; y++)
+                  
+                    for (int y = 0; y < HEIGHT; y++)
                     {
-                         real = X1 + (x / (double)WIDTH * (X2 - X1));
-                         imag = Y2 - (y / (double)HEIGHT * (Y2 - Y1));
-                        int iteration = CalculateJuliaIterations(real, imag); 
-                        Color color = GetColorFromIterations(iteration);
+                        real = X1 + (x / (double)WIDTH * (X2 - X1));
+                        imag = Y2 - (y / (double)HEIGHT * (Y2 - Y1));
+                       
+                        Color color = CalculateJulia(real, imag, currIteration);
 
                         g.FillRectangle(new SolidBrush(color), x, y, 1, 1);
                     }
-                   
+
                 }
             }
             pictureBox1.Invalidate();
             currIteration++;
         }
-    
-        private int CalculateJuliaIterations(double x, double y)
+        private Color CalculateJulia(double x, double y, int iteration)
         {
-            // Вычислить число итераций для точки
             Complex z = new Complex(x, y);
             for (int i = 0; i < MAXCOLOR; i++)
             {
                 z = z * z + C;
                 if (z.Module > 2)
                 {
-                    return i;
+                   
+                    return Color.Transparent;
                 }
+                if (i == iteration) return outColor;
             }
-
-            // Точка принадлежит множеству Жулиа
-            return MAXCOLOR;
+            return Color.FromArgb(0, MAXCOLOR, 0);
         }
-        private Color GetColorFromIterations(int iterations)
-        {
-            // Преобразовать число итераций в цвет (например, по цветовой палитре)
-            if (iterations == MAXCOLOR)
-            {
-                return Color.Black; // Черный для точек, принадлежащих множеству
-            }
-            else
-            {
-                // Используем HSL для создания плавных цветовых переходов
-                double hue = (iterations / (double)MAXCOLOR) * 360;
-                return HSLToRGB(hue, 1.0, 0.5); // Насыщенность и светлота фиксированы
-            }
-        }
-
-        // Вспомогательные функции для преобразования HSL в RGB
-        private static Color HSLToRGB(double hue, double saturation, double lightness)
-        {
-            double r, g, b;
-            if (saturation == 0)
-            {
-                r = g = b = lightness;
-            }
-            else
-            {
-                double q = lightness < 0.5 ? lightness * (1 + saturation) : (lightness + saturation) - (lightness * saturation);
-                double p = 2 * lightness - q;
-                r = HueToRGB(p, q, hue + (1.0 / 3.0));
-                g = HueToRGB(p, q, hue);
-                b = HueToRGB(p, q, hue - (1.0 / 3.0));
-            }
-            return Color.FromArgb((int)(r * 255), (int)(g * 255), (int)(b * 255));
-        }
-
-        private static double HueToRGB(double p, double q, double t)
-        {
-            if (t < 0) t += 1;
-            if (t > 1) t -= 1;
-            if (6 * t < 1) return p + (q - p) * 6 * t;
-            if (2 * t < 1) return q;
-            if (3 * t < 2) return p + (q - p) * 6 * (2 / 3 - t);
-            return p;
-        }
+    
     }
 }
