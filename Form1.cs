@@ -64,8 +64,7 @@ namespace fractal
                          real = X1 + (x / (double)WIDTH * (X2 - X1));
                          imag = Y2 - (y / (double)HEIGHT * (Y2 - Y1));
 
-                        int iteration = CalculateJuliaIterations(real, imag);
-                        Color color = GetColorFromIterations(iteration); 
+                        Color color = CalculateJulia(real, imag, currIteration);
 
                         g.FillRectangle(new SolidBrush(color), x, y, 1, 1);
                     }
@@ -75,80 +74,20 @@ namespace fractal
             pictureBox1.Invalidate();
             currIteration++;
         }
-        private int CalculateJuliaIterations(double real, double imag)
+        private Color CalculateJulia(double x, double y, int iteration)
         {
-            Complex z = new Complex(real, imag);
-            for (int i = 0; i < MAXCOLOR; i++)
+            Complex z = new Complex(x, y);
+            for (int i=0; i< MAXCOLOR; i++)
             {
                 z = z * z + C;
                 if (z.Module > 2)
                 {
-                    return i;
+                    return outColor;
                 }
+                if (i == iteration) return GetColorFromNumner(MAXCOLOR);
             }
-
-            // Точка принадлежит множеству Жулиа
-            return MAXCOLOR;
+            return Color.FromArgb(0, MAXCOLOR, 0);
         }
-
-        private Color GetColorFromIterations(int iterations)
-        {
-            // Преобразовать число итераций в цвет
-            if (iterations == MAXCOLOR)
-            {
-                return Color.Black; 
-            }
-            else
-            {
-                // Используем HSL для создания плавных цветовых переходов
-                double hue = (iterations / (double)MAXCOLOR) * 360;
-                return HSLToRGB(hue, 1.0, 0.5); // Насыщенность и светлота фиксированы
-            }
-        }
-
-        // Вспомогательные функции для преобразования HSL в RGB
-        private static Color HSLToRGB(double hue, double saturation, double lightness)
-        {
-            double r, g, b;
-            if (saturation == 0)
-            {
-                r = g = b = lightness;
-            }
-            else
-            {
-                double q = lightness < 0.5 ? lightness * (1 + saturation) : (lightness + saturation) - (lightness * saturation);
-                double p = 2 * lightness - q;
-                r = HueToRGB(p, q, hue + (1.0 / 3.0));
-                g = HueToRGB(p, q, hue);
-                b = HueToRGB(p, q, hue - (1.0 / 3.0));
-            }
-            return Color.FromArgb((int)(r * 255), (int)(g * 255), (int)(b * 255));
-        }
-
-        private static double HueToRGB(double p, double q, double t)
-        {
-            if (t < 0) t += 1;
-            if (t > 1) t -= 1;
-            if (6 * t < 1) return p + (q - p) * 6 * t;
-            if (2 * t < 1) return q;
-            if (3 * t < 2) return p + (q - p) * 6 * (2 / 3 - t);
-            return p;
-        }
-
-        //private Color CalculateJulia(double x, double y, int iteration)
-        //{
-        //    Complex z = new Complex(x, y);
-        //    for (int i=0; i< MAXCOLOR; i++)
-        //    {
-        //        z = z * z + C;
-        //        if (z.VectorLen > 2)
-        //        {
-        //            return outColor;
-        //        }
-        //        if (i == iteration) return GetColorFromNumner(MAXCOLOR);
-        //    }
-        //    return Color.FromArgb(0, MAXCOLOR, 0);
-        //}
         private Color GetColorFromNumner(int num)
         {
             int red = num % 256;
