@@ -1,0 +1,10 @@
+D:\5th semester\computer graphics\lr2\fractal\fractal\bin\Debug\fractal.exe.config
+D:\5th semester\computer graphics\lr2\fractal\fractal\bin\Debug\fractal.exe
+D:\5th semester\computer graphics\lr2\fractal\fractal\bin\Debug\fractal.pdb
+D:\5th semester\computer graphics\lr2\fractal\fractal\obj\Debug\fractal.csproj.AssemblyReference.cache
+D:\5th semester\computer graphics\lr2\fractal\fractal\obj\Debug\fractal.Form1.resources
+D:\5th semester\computer graphics\lr2\fractal\fractal\obj\Debug\fractal.Properties.Resources.resources
+D:\5th semester\computer graphics\lr2\fractal\fractal\obj\Debug\fractal.csproj.GenerateResource.cache
+D:\5th semester\computer graphics\lr2\fractal\fractal\obj\Debug\fractal.csproj.CoreCompileInputs.cache
+D:\5th semester\computer graphics\lr2\fractal\fractal\obj\Debug\fractal.exe
+D:\5th semester\computer graphics\lr2\fractal\fractal\obj\Debug\fractal.pdb
